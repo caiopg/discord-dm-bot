@@ -7,7 +7,7 @@ const { Routes } = require('discord-api-types/v9');
 const commands = [
 	new SlashCommandBuilder()
 		.setName('deliver')
-		.setDescription('Deliver private message to everybody in specified role.')
+		.setDescription('Send a private message to a particular role of people')
 		.addRoleOption(
 			option =>
 				option.setName('role')
