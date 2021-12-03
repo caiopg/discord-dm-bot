@@ -8,17 +8,17 @@ client.on('ready', () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    console.log('Received a command for bot.');
+    console.log(`Received a command for bot: ${interaction.valueOf}`);
+
+    if (!interaction.isCommand()) {
+        console.log(`Not a command, aborting`);
+        return;
+    }
 
     const authorizedMembers = process.env.AUTHORIZED_MEMBERS.split(',');
     const currentMemberId = interaction.member.id;
     if(!authorizedMembers.includes(currentMemberId)) {
         console.log(`NOT AUTHORIZED MEMBER ID: ${currentMemberId}`);
-        return;
-    }
-
-	if (!interaction.isCommand()) {
-        console.log(`Not a command`);
         return;
     }
 
@@ -39,9 +39,14 @@ client.on('interactionCreate', async interaction => {
                 if (role.id === ctxRole.value) {
                     const memberName = member.displayName;
                     console.log(`Trying to send message to ${memberName}...`);
-                    await member.send(ctxMessage.value);
-                    console.log(`SUCCESS ${memberName}`);
-                }
+                    await member.send(ctxMessage.value).then(() => {
+                        console.log(`SUCCESS for ${memberName}`);
+                    })
+                    .catch(err => {
+                        console.log(`FAIL for ${memberName}`);
+                        console.log(err);
+                    });
+                }  
             });
         });
 
@@ -83,8 +88,13 @@ client.on('messageCreate', async message => {
                 if (role.name === messageRole) {
                     const memberName = member.displayName;
                     console.log(`Trying to send message to ${memberName}...`);
-                    await member.send(messageToSend);
-                    console.log(`SUCCESS ${memberName}`);
+                    await member.send(messageToSend).then(() => {
+                        console.log(`SUCCESS for ${memberName}`);
+                    })
+                    .catch(err => {
+                        console.log(`FAIL for ${memberName}`);
+                        console.log(err);
+                    });
                 }
             });
         });
