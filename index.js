@@ -102,6 +102,8 @@ client.on('messageCreate', async message => {
 	} else {
         console.log("Nothing was done with message");
     }
+
+    console.log("Ended message treatment.");
 });
 
 const token = process.env.TOKEN;
